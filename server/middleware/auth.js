@@ -9,14 +9,9 @@ const verifyToken = (req, res, next) => {
     return res.status(401).json({ success: false, message: 'Access Token Not Found' })
 
   try {
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-      if (err)
-        return res.status(401).json({success: false, message: 'Access Tolen Not Found'})
-      
-      req.userId = decoded.userId 
-      next()
-    })
-
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+    req.userId = decoded.userId
+    next()
   } catch (error) {
     console.log(error)
     return res.status(403).json({ success: false, message: 'Invalid token'})
